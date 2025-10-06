@@ -72,7 +72,7 @@
         </property>
         <property>
             <name>dfs.namenode.name.dir</name>
-            <value>file:///usr/local/hadoop/hdfs/data</value>
+            <value>file:///usr/local/hadoop/hdfs/name</value>
         </property>
         <property>
             <name>dfs.datanode.data.dir</name>
@@ -125,15 +125,21 @@
 6. Создаем папки для хранения данных на нодах:
    ```bash
    sudo mkdir -p /usr/local/hadoop/hdfs/data
-   sudo chown ubuntu:ubuntu -R /usr/local/hadoop/hdfs/data
+   sudo chown <hadoop_node_admin>:<hadoop_node_admin_group (чаще всего то же самое)> -R /usr/local/hadoop/hdfs/data
    chmod 700 /usr/local/hadoop/hdfs/data
    ```
-7. Создаем `masters` файл по пути `$HADOOP_HOME/etc/hadoop/masters` и добавляем туда IP-адрес hadoopnn. Далее создаем `workers` файл по пути `$HADOOP_HOME/etc/hadoop/workers`. Добавляем туда адрес обеих нод. 
-8. Форматируем namenode:
+7. Создаем папки для Namenode: 
+   ```bash
+   sudo mkdir -p /usr/local/hadoop/hdfs/name
+   sudo chown <hadoop_node_admin>:<hadoop_node_admin_group (чаще всего то же самое)> -R /usr/local/hadoop/hdfs/name
+   chmod 700 /usr/local/hadoop/hdfs/name
+   ```
+8. Создаем `masters` файл по пути `$HADOOP_HOME/etc/hadoop/masters` и добавляем туда IP-адрес hadoopnn. Далее создаем `workers` файл по пути `$HADOOP_HOME/etc/hadoop/workers`. Добавляем туда адрес обеих нод. 
+9.  Форматируем namenode:
    ```bash
    hdfs namenode -format
    ```
-9. Запускаем кластер командой `start-all.sh` и проверяем доступность web ui для HDFS и YARN, чна адресах `http://<hadoopnn_public_ip>:9870/` и `http://<hadoopnn_public_ip>:8088/` соответственно.
+10. Запускаем кластер командой `start-all.sh` и проверяем доступность web ui для HDFS и YARN, чна адресах `http://<hadoopnn_public_ip>:9870/` и `http://<hadoopnn_public_ip>:8088/` соответственно.
 
 ### Возможные проблемы с запуском MapReduce приложения
 
