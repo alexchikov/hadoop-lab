@@ -4,7 +4,11 @@
 
 - [Лабораторная работа №5: Знакомство с Apache Hadoop](#лабораторная-работа-5-знакомство-с-apache-hadoop)
   - [Разворачиваем Hadoop кластер на двух нодах](#разворачиваем-hadoop-кластер-на-двух-нодах)
+    - [Возможные проблемы с запуском MapReduce приложения](#возможные-проблемы-с-запуском-mapreduce-приложения)
+    - [Возможные проблемы с Safe Mode](#возможные-проблемы-с-safe-mode)
+    - [Настройка логов Apache YARN](#настройка-логов-apache-yarn)
   - [Задания](#задания)
+  - [Дополнительное задание](#дополнительное-задание)
 
 
 ---
@@ -103,6 +107,18 @@
             <name>mapreduce.framework.name</name>
             <value>yarn</value>
         </property>
+        <property>
+            <name>yarn.app.mapreduce.am.env</name>
+            <value>HADOOP_MAPRED_HOME=/opt/hadoop</value>
+        </property>
+        <property>
+            <name>mapreduce.map.env</name>
+            <value>HADOOP_MAPRED_HOME=/opt/hadoop</value>
+        </property>
+        <property>
+            <name>mapreduce.reduce.env</name>
+            <value>HADOOP_MAPRED_HOME=/opt/hadoop</value>
+        </property>
     </configuration>
    ```
 6. Создаем папки для хранения данных на нодах:
@@ -118,10 +134,45 @@
    ```
 9. Запускаем кластер командой `start-all.sh` и проверяем доступность web ui для HDFS и YARN, чтобы это сделать, так как адреса приватные, нужно пробросить порты командой `ssh` с флагом `-L`. Например: `ssh -i ~/.ssh/some_key -L 9870:127.0.0.1:9870 hadoop@hadoopnn`. YARN доступен на порту *8088*.
 
+### Возможные проблемы с запуском MapReduce приложения
+
+В используемом дистрибутиве Hadoop наблюдалась проблема с запуском MapReduce приложений, вызванная несовместимостью версий ядра Hadoop и jar `protobuf`. Если столкнетесь с данной проблемой, выполните дальнейшие шаги для решения ошибки:
+1. Удаляем старый jar с помощью команды `sudo find /opt/hadoop/share/hadoop/ -name "protobuf-java-2.5.0.jar" -delete`
+2. Переносим новый jar в директорию для модулей Hadoop &mdash; `sudo cp /opt/hadoop/share/hadoop/yarn/csi/lib/protobuf-java-3.7.1.jar /opt/hadoop/share/hadoop/common/lib/
+`
+3. Меняем права &mdash; `udo chown hadoop:hadoop /opt/hadoop/share/hadoop/common/lib/protobuf-java-3.7.1.jar`
+4. Перезапускаем кластер командами `stop-all.sh` и `start-all.sh`
+
+### Возможные проблемы с Safe Mode
+
+Также существует вероятность столкнуться с проблемами при запуске MapReduce приложения с HDFS Safemode. Для решения проблемы необходимо отключить его командой `hdfs dfsadmin -safemode leave`
+
+### Настройка логов Apache YARN
+
+Для лучшей отладки приложений MapReduce необходимо настроить возможность хранить логи для Apache YARN. Для этого сделайте следующие шаги:
+1. На каждой ноде создайте папку для хранения логов и выдайте права следующими командами:
+   ```bash
+   sudo mkdir -p /usr/local/hadoop/logs
+   sudo chown -R hadoop:hadoop /usr/local/hadoop/logs
+   ```
+2. Создайте папку для хранения логов в HDFS и также выдайте на нее права пользователю `yarn`:
+   ```bash
+   hdfs dfs -mkdir /app-logs
+   hdfs dfs -chown yarn:hadoop /app-logs
+   ```
+3. 
+
+
 ## Задания
 
-1. Создайте папку с нашим именем в корне;
+1. Создайте папку с вашим именем по пути `/user/<name>`;
 2. Затем положите туда файл `tweets.txt`;
-3. Запустите MapReduce приложение `wordcount.jar` для этого файла;
-4. Проверьте в YARN Web UI статус работы приложения;
-5. Удалите файл `tweets.txt`;
+3. Переименуйте файл в `tweets_dataset.txt`;
+4. Запустите MapReduce приложение `wordcount.jar` для этого файла. При запуске нужно будет указать используемый класс в jar &mdash; `com.petehouston.hadoop.WordCount`, путь до файла с входными данными в HDFS и директорию, куда будет записан вывод программы;
+5. Проверьте в YARN Web UI статус работы приложения;
+6. Выведите в терминал первые 50 строк полученного файла; 
+7. Удалите папку, куда вы записывали вывод программы, с ее содержимым;
+
+## Дополнительное задание
+
+В [данном](https://github.com/petehouston/hadoop-wordcount) репозитории вы можете найти пример Java проекта для работы с MapReduce. Проблема прошлого запуска программы в том, что данные были неотсортированы, из-за чего не очень наглядными. Склонируйте репозиторий и измените программу так, чтобы вывод программы получался отсортированным по количеству упоминаний слов в порядке убывания. Какой топ-50 слов наиболее частых по использованию в твитах?
