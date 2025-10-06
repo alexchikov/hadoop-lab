@@ -160,8 +160,34 @@
    hdfs dfs -mkdir /app-logs
    hdfs dfs -chown yarn:hadoop /app-logs
    ```
-3. 
+3. Добавьте в `yarn-site.xml` следующие параметры:
+   ```xml
+   <property>
+     <name>yarn.log-aggregation-enable</name>
+     <value>true</value>
+   </property>
 
+   <property>
+     <name>yarn.nodemanager.remote-app-log-dir</name>
+     <value>/app-logs</value>
+   </property>
+
+   <property>
+     <name>yarn.log-aggregation.retain-seconds</name>
+     <value>604800</value>
+   </property>
+
+   <property>
+     <name>yarn.log-aggregation.retain-check-interval-seconds</name>
+     <value>3600</value>
+   </property>
+
+   <property>
+     <name>yarn.nodemanager.remote-app-log-dir-suffix</name>
+     <value>logs</value>
+   </property>
+   ```
+4. Перезапустите Hadoop кластер командами `stop-all.sh` и `start-all.sh`.
 
 ## Задания
 
