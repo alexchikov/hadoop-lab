@@ -62,6 +62,7 @@
         </property>
     </configuration>
    ```
+   **Здесь и далее меняйте `hadoop_private_ip` в конфигурационных файлах на приватный ip вашей машины**
 3. Обновляем `hdfs-site.xml` в той же папке:
    ```xml
    <configuration>
