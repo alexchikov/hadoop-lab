@@ -31,7 +31,7 @@
    export PATH=$PATH:$JAVA_HOME:$JAVA_HOME/bin
    ```
 3. Генерируем новый ssh-ключ командой `ssh-keygen`.
-4. Добавляем хост datanode в `/etc/hosts`. Добавляем `.pub` ключ в `~/.ssh/authorized_keys` на datanode.
+4. Добавляем хост `hadoopdn` в `/etc/hosts`. Добавляем `.pub` ключ в `~/.ssh/authorized_keys` на datanode.
 5. Проверяем подключение по `ssh` к другой ноде.
 6. Скачиваем архив с Hadoop командой `wget https://dlcdn.apache.org/hadoop/common/hadoop-3.3.6/hadoop-3.3.6.tar.gz` и распаковываем его.
 7. Переносим папку с hadoop в `/opt/hadoop` командой `mv`.
@@ -60,7 +60,7 @@
             <name>fs.defaultFS</name>
             <value>hdfs://hadoop_private_namenode_ip:9000</value>
         </property>
-    </configuration>
+   </configuration>
    ```
    **Здесь и далее меняйте `hadoop_private_ip` в конфигурационных файлах на приватный ip вашей машины**
 3. Обновляем `hdfs-site.xml` в той же папке:
@@ -78,7 +78,7 @@
             <name>dfs.datanode.data.dir</name>
             <value>file:///usr/local/hadoop/hdfs/data</value>
         </property>
-    </configuration>
+   </configuration>
    ```
 4. Обновляем `yarn-site.xml`:
    ```xml
@@ -95,7 +95,7 @@
             <name>yarn.resourcemanager.hostname</name>
             <value>hadoop_private_namenode_ip</value>
         </property>
-    </configuration>
+   </configuration>
    ```
 5. Обновляем `mapred-site.xml`:
    ```xml
@@ -120,7 +120,7 @@
             <name>mapreduce.reduce.env</name>
             <value>HADOOP_MAPRED_HOME=/opt/hadoop</value>
         </property>
-    </configuration>
+   </configuration>
    ```
 6. Создаем папки для хранения данных на нодах:
    ```bash
