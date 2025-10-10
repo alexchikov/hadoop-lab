@@ -31,7 +31,7 @@
    export PATH=$PATH:$JAVA_HOME:$JAVA_HOME/bin
    ```
 3. Генерируем новый ssh-ключ командой `ssh-keygen`.
-4. Добавляем хост `hadoopdn` в `/etc/hosts`. Добавляем `.pub` ключ в `~/.ssh/authorized_keys` на datanode.
+4. Добавляем хост `hadoopdn` в `/etc/hosts`. Добавляем сгенерированный `.pub` ключ на `hadoopnn` в `~/.ssh/authorized_keys` на `hadoopdn`. Также необходимо добавить этот же ключ в собственный `~/.ssh/authorized_keys` на `hadoopnn`.
 5. Проверяем подключение по `ssh` к другой ноде.
 6. Скачиваем архив с Hadoop командой `wget https://dlcdn.apache.org/hadoop/common/hadoop-3.3.6/hadoop-3.3.6.tar.gz` и распаковываем его.
 7. Переносим папку с hadoop в `/opt/hadoop` командой `mv`.
