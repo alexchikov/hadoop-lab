@@ -147,7 +147,7 @@
 1. Удаляем старый jar с помощью команды `sudo find /opt/hadoop/share/hadoop/ -name "protobuf-java-2.5.0.jar" -delete`
 2. Переносим новый jar в директорию для модулей Hadoop &mdash; `sudo cp /opt/hadoop/share/hadoop/yarn/csi/lib/protobuf-java-3.7.1.jar /opt/hadoop/share/hadoop/common/lib/
 `
-3. Меняем права &mdash; `udo chown hadoop:hadoop /opt/hadoop/share/hadoop/common/lib/protobuf-java-3.7.1.jar`
+3. Меняем права &mdash; `sudo chown hadoop:hadoop /opt/hadoop/share/hadoop/common/lib/protobuf-java-3.7.1.jar`
 4. Перезапускаем кластер командами `stop-all.sh` и `start-all.sh`
 
 ### Возможные проблемы с Safe Mode
